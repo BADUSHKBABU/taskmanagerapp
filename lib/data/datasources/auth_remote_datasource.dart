@@ -9,7 +9,11 @@ import '../../core/errors/autherrormessage.dart';
 abstract class AuthRemoteDataSource {
   Future<UserModel?> getCurrentUser();
   Future<UserModel> signInWithEmailAndPassword(String email, String password);
-  Future<UserModel> signUpWithEmailAndPassword(String email, String password, String name);
+  Future<UserModel> signUpWithEmailAndPassword(
+    String email,
+    String password,
+    String name,
+  );
   Future<void> signOut();
   Stream<User?> get authStateChanges;
 }
@@ -21,29 +25,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({
     FirebaseAuth? firebaseAuth,
     FirebaseFirestore? firestore,
-  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _firestore = firestore ?? FirebaseFirestore.instance;
+  }) : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
+       _firestore = firestore ?? FirebaseFirestore.instance;
 
   @override
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
-
-
 
   @override
   Future<UserModel?> getCurrentUser() async {
     try {
       final user = _firebaseAuth.currentUser;
       if (user == null) {
-        debugPrint('ℹ️ [AuthRemoteDataSource] getCurrentUser: No user signed in');
         return null;
       }
-
-      debugPrint('🔍 [AuthRemoteDataSource] getCurrentUser: Fetching profile for UID ${user.uid}');
 
       try {
         final doc = await _firestore.collection('user').doc(user.uid).get();
         if (doc.exists) {
-          debugPrint('✅ [AuthRemoteDataSource] Found user document in "user" collection');
           return UserModel.fromSnapshot(doc);
         }
       } catch (e) {
@@ -51,21 +49,26 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       // Fallback user model if doc query failed or doc doesn't exist
-      debugPrint('ℹ️ [AuthRemoteDataSource] Using Auth fallback user profile for UID ${user.uid}');
+
       return UserModel(
         uid: user.uid,
-        name: user.displayName ?? (user.email != null && user.email!.contains('@') ? user.email!.split('@').first : 'User'),
+        name:
+            user.displayName ??
+            (user.email != null && user.email!.contains('@')
+                ? user.email!.split('@').first
+                : 'User'),
         email: user.email ?? '',
       );
     } catch (e) {
-      debugPrint('❌ [AuthRemoteDataSource] getCurrentUser exception: $e');
       throw ServerFailure('Failed to fetch user data: ${e.toString()}');
     }
   }
 
   @override
-  Future<UserModel> signInWithEmailAndPassword(String email, String password) async {
-
+  Future<UserModel> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
       final credential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email.trim(),
@@ -74,35 +77,36 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       final uid = credential.user!.uid;
 
-
       try {
         final doc = await _firestore.collection('user').doc(uid).get();
         if (doc.exists) {
-
           return UserModel.fromSnapshot(doc);
         }
-      } catch (e) {
-        throw e;
+      } catch (a) {
+        throw a.toString();
       }
 
-      final name = credential.user?.displayName ?? (email.contains('@') ? email.split('@').first : 'User');
+      final name =
+          credential.user?.displayName ??
+          (email.contains('@') ? email.split('@').first : 'User');
       return UserModel(
         uid: uid,
         name: name,
         email: credential.user?.email ?? email,
       );
     } on FirebaseAuthException catch (e) {
-      throw AuthFailure(
-          getAuthErrorMessage(e.code));
+      throw AuthFailure(getAuthErrorMessage(e.code));
     } catch (e) {
-
       throw AuthFailure(e.toString());
     }
   }
 
   @override
-  Future<UserModel> signUpWithEmailAndPassword(String email, String password, String name) async {
-
+  Future<UserModel> signUpWithEmailAndPassword(
+    String email,
+    String password,
+    String name,
+  ) async {
     try {
       final credential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email.trim(),
@@ -145,7 +149,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerFailure('Failed to sign out: ${e.toString()}');
     }
   }
-
-
-
 }

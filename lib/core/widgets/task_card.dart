@@ -6,7 +6,7 @@ import 'package:taskmanagerapp/domain/entities/task_entity.dart';
 class TaskCard extends StatelessWidget {
   final TaskEntity task;
   final ValueChanged<TaskCompletionStatus> onStatusChanged;
-  
+
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -14,7 +14,7 @@ class TaskCard extends StatelessWidget {
     super.key,
     required this.task,
     required this.onStatusChanged,
-    
+
     required this.onEdit,
     required this.onDelete,
   });
@@ -111,7 +111,7 @@ class TaskCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          // onTap: onTap,
+        
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(

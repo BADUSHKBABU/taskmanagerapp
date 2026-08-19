@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 
 class Textfield extends StatelessWidget {
-  TextEditingController controller;
-  bool ispassword;
-  String validationmsg;
-  Icon prefiixIcon;
-  Icon suffixicon;
+  final TextEditingController controller;
+  final bool ispassword;
+  final String validationmsg;
+  final Icon prefiixIcon;
+  final Icon suffixicon;
 
 
   Textfield({

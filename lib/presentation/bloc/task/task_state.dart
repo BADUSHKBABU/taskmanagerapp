@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:taskmanagerapp/domain/entities/task_entity.dart';
 import 'package:taskmanagerapp/presentation/bloc/task/task_event.dart';
 

@@ -316,7 +316,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
     if (taskState.status == TaskBlocStatus.loading) {
       return const LoadingView(message: 'Loading tasks from Firestore...');
     }
-
     if (taskState.status == TaskBlocStatus.failure) {
       return ErrorView(
         errorMessage: taskState.errorMessage ?? 'Failed to load tasks',
@@ -324,7 +323,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
             context.read<TaskBloc>().add(const SubscribeTasksEvent()),
       );
     }
-
     final tasks = taskState.filteredTasks;
     if (tasks.isEmpty) {
       return EmptyView(

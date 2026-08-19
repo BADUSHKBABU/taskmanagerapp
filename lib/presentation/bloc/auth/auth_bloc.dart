@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:taskmanagerapp/core/errors/failures.dart';
 import 'package:taskmanagerapp/domain/usecases/auth_usecases.dart';
 import 'package:taskmanagerapp/presentation/bloc/auth/auth_event.dart';
 import 'package:taskmanagerapp/presentation/bloc/auth/auth_state.dart';

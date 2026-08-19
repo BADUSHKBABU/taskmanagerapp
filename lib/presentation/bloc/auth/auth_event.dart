@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-abstract class AuthEvent  {
+abstract class AuthEvent {
   const AuthEvent();
 
 }

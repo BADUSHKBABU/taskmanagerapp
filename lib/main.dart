@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:taskmanagerapp/core/constants/app_colors.dart';
 import 'package:taskmanagerapp/core/network/network_info.dart';
+import 'package:taskmanagerapp/core/widgets/error_view.dart';
 import 'package:taskmanagerapp/data/datasources/auth_remote_datasource.dart';
 import 'package:taskmanagerapp/data/datasources/task_remote_datasource.dart';
 import 'package:taskmanagerapp/data/repositories/auth_repository_impl.dart';
@@ -22,23 +23,20 @@ import 'core/widgets/loading_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase Cloud Services
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  // Initialize Dependencies (Clean Architecture Dependency Injection)
   final networkInfo = NetworkInfoImpl(Connectivity());
 
-  // Data Sources
   final authRemoteDataSource = AuthRemoteDataSourceImpl();
   final taskRemoteDataSource = TaskRemoteDataSourceImpl();
 
-  // Repositories
-  final authRepository = AuthRepositoryImpl(remoteDataSource: authRemoteDataSource);
-  final taskRepository = TaskRepositoryImpl(remoteDataSource: taskRemoteDataSource);
+  final authRepository = AuthRepositoryImpl(
+    remoteDataSource: authRemoteDataSource,
+  );
+  final taskRepository = TaskRepositoryImpl(
+    remoteDataSource: taskRemoteDataSource,
+  );
 
-  // Use Cases
   final signInUseCase = SignInUseCase(authRepository);
   final signUpUseCase = SignUpUseCase(authRepository);
   final signOutUseCase = SignOutUseCase(authRepository);
@@ -118,6 +116,17 @@ class AuthGate extends StatelessWidget {
 
         if (state is AuthenticatedState) {
           return const TaskListScreen();
+        }
+        if (state is AuthErrorState) {
+          return ErrorView(
+            errorMessage: state.message.toString(),
+            onRetry: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) =>  LoginScreen()),
+              );
+            },
+          );
         }
 
         return const LoginScreen();
