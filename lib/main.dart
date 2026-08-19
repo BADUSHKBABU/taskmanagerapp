@@ -2,10 +2,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:taskmanagerapp/core/constants/app_colors.dart';
 import 'package:taskmanagerapp/core/network/network_info.dart';
 import 'package:taskmanagerapp/core/widgets/error_view.dart';
 import 'package:taskmanagerapp/data/datasources/auth_remote_datasource.dart';
+import 'package:taskmanagerapp/data/datasources/task_local_datasource.dart';
 import 'package:taskmanagerapp/data/datasources/task_remote_datasource.dart';
 import 'package:taskmanagerapp/data/repositories/auth_repository_impl.dart';
 import 'package:taskmanagerapp/data/repositories/task_repository_impl.dart';
@@ -24,18 +26,24 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Hive.initFlutter();
+  await Hive.openBox(TaskLocalDataSourceImpl.boxName);
 
   final networkInfo = NetworkInfoImpl(Connectivity());
 
   final authRemoteDataSource = AuthRemoteDataSourceImpl();
   final taskRemoteDataSource = TaskRemoteDataSourceImpl();
+  final taskLocalDataSource = TaskLocalDataSourceImpl();
 
   final authRepository = AuthRepositoryImpl(
     remoteDataSource: authRemoteDataSource,
   );
   final taskRepository = TaskRepositoryImpl(
     remoteDataSource: taskRemoteDataSource,
+    localDataSource: taskLocalDataSource,
+    networkInfo: networkInfo,
   );
+
 
   final signInUseCase = SignInUseCase(authRepository);
   final signUpUseCase = SignUpUseCase(authRepository);

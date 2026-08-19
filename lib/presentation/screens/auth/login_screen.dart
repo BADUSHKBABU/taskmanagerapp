@@ -30,11 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       FocusScope.of(context).unfocus();
       context.read<AuthBloc>().add(
-            SignInEvent(
-              email: _emailController.text,
-              password: _passwordController.text,
-            ),
-          );
+        SignInEvent(
+          email: _emailController.text,
+          password: _passwordController.text,
+        ),
+      );
     }
   }
 
@@ -99,15 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Sign in to manage your tasks effortlessly',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: AppColors.textSecondary,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+
                       const SizedBox(height: 36),
 
                       // Email Field
@@ -117,27 +109,39 @@ class _LoginScreenState extends State<LoginScreen> {
                         enabled: !isLoading,
                         decoration: InputDecoration(
                           labelText: 'Email Address',
-                          prefixIcon: const Icon(Icons.email_outlined, color: AppColors.textMuted),
+                          prefixIcon: const Icon(
+                            Icons.email_outlined,
+                            color: AppColors.textMuted,
+                          ),
                           filled: true,
                           fillColor: AppColors.surface,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.border),
+                            borderSide: const BorderSide(
+                              color: AppColors.border,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.border),
+                            borderSide: const BorderSide(
+                              color: AppColors.border,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                            borderSide: const BorderSide(
+                              color: AppColors.primary,
+                              width: 2,
+                            ),
                           ),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
                             return 'Please enter your email';
                           }
-                          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+                          if (!RegExp(
+                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                          ).hasMatch(value.trim())) {
                             return 'Please enter a valid email address';
                           }
                           return null;
@@ -152,10 +156,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         enabled: !isLoading,
                         decoration: InputDecoration(
                           labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock_outline_rounded, color: AppColors.textMuted),
+                          prefixIcon: const Icon(
+                            Icons.lock_outline_rounded,
+                            color: AppColors.textMuted,
+                          ),
                           suffixIcon: IconButton(
                             icon: Icon(
-                              _obscurePassword ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
                               color: AppColors.textMuted,
                             ),
                             onPressed: () {
@@ -168,15 +177,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           fillColor: AppColors.surface,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.border),
+                            borderSide: const BorderSide(
+                              color: AppColors.border,
+                            ),
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.border),
+                            borderSide: const BorderSide(
+                              color: AppColors.border,
+                            ),
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                            borderSide: const BorderSide(
+                              color: AppColors.primary,
+                              width: 2,
+                            ),
                           ),
                         ),
                         validator: (value) {
@@ -234,7 +250,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             onTap: isLoading
                                 ? null
                                 : () {
-                                    context.read<AuthBloc>().add(const ClearAuthErrorEvent());
+                                    context.read<AuthBloc>().add(
+                                      const ClearAuthErrorEvent(),
+                                    );
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (_) => const RegisterScreen(),
