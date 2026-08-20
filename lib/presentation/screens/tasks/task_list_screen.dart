@@ -278,13 +278,6 @@ class _TaskListScreenState extends State<TaskListScreen> {
                               value: TaskSortOption.priorityHighToLow,
                               child: const Text('Priority (High to Low)'),
                             ),
-                            CheckedPopupMenuItem(
-                              checked:
-                                  taskState.sortOption ==
-                                  TaskSortOption.createdDateDesc,
-                              value: TaskSortOption.createdDateDesc,
-                              child: const Text('Newest Created'),
-                            ),
                           ],
                         ),
                       ],

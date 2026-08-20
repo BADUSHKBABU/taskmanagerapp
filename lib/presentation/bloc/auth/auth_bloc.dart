@@ -25,12 +25,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> onCheckAuth(CheckAuthEvent event, Emitter<AuthState> emit) async {
-    print("inside AuthBloc ,CheckAuthEvent triggered");
+
     emit(const AuthLoadingState());
     try {
       final user = await getCurrentUserUseCase();
       if (user != null) {
-        print("AuthBloc User is authenticated: ${user.email} (${user.name})");
+      
         emit(AuthenticatedState(user));
       } else {
         print("AuthBloc User is not authenticated");
